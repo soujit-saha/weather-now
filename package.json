@@ -7,11 +7,15 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "prebuild": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
+    "build": "cd android && gradlew assembleDebug"
   },
   "dependencies": {
+    "axios": "^0.27.2",
     "react": "17.0.2",
-    "react-native": "0.68.2"
+    "react-native": "0.68.2",
+    "react-native-get-location": "^2.2.1"
   },
   "devDependencies": {
     "@babel/core": "7.18.2",

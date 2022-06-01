@@ -90,23 +90,35 @@ const Home = () => {
       </View>
       <View
         style={{
-          justifyContent: 'space-between',
           alignItems: 'center',
-          flexDirection: 'row',
           backgroundColor: '#EFEFEF',
           borderRadius: 11,
-          paddingHorizontal: 15,
           marginVertical: 11,
-
           marginHorizontal: 24,
+          width: '60%',
+          height: 100,
+          padding: 5,
         }}>
-        <Text>SUNRISE & SUNSET</Text>
-        <View>
-          <Image source={require('../Icons/pic1.png')} />
-          <View>
-            <Text>Sunrise</Text>
-            <Text>06:25 AM</Text>
-            <View style={{borderWidth: 1, borderColor: 'black'}}></View>
+        <Text>Mon 2</Text>
+        <View
+          style={{
+            flexDirection: 'row',
+
+            justifyContent: 'space-around',
+            width: '90%',
+            height: 70,
+          }}>
+          <Image
+            source={require('../Icons/arow.png')}
+            style={{height: 60, width: 60}}
+          />
+          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            <Text style={{fontSize: 20}}>25°</Text>
+            <Text style={{fontSize: 20}}>25°</Text>
+          </View>
+          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            <Text style={{fontSize: 20}}>%RAIN</Text>
+            <Text style={{fontSize: 20}}>81%</Text>
           </View>
         </View>
       </View>

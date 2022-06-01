@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import React from 'react';
 
-const Header = ({onChangeText, value, onPress}) => {
+const Header = ({onChangeText, value, onPress, onSubmitEditing}) => {
   return (
     <View
       style={{
@@ -34,6 +34,7 @@ const Header = ({onChangeText, value, onPress}) => {
         placeholderTextColor="#C4C4C4"
         onChangeText={onChangeText}
         value={value}
+        onSubmitEditing={onSubmitEditing}
       />
       <Pressable onPress={onPress}>
         <Image

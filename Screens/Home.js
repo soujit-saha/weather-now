@@ -9,7 +9,7 @@ const Home = () => {
   const [data, setdata] = React.useState(null);
   const [location, setlocation] = React.useState(null);
   const [value, setval] = React.useState('');
-  const [currentLocation, setCurrentLocation] = React.useState();
+  const [currentLocation, setCurrentLocation] = React.useState(null);
   const [forcastArray, setforcastArray] = React.useState([]);
   useEffect(() => {
     GetLocation.getCurrentPosition({
@@ -62,6 +62,10 @@ const Home = () => {
         onChangeText={txt => setval(txt)}
         value={value}
         onPress={() => getData()}
+        onSubmitEditing={({nativeEvent: {text, eventCount, target}}) => {
+          setval(text);
+          getData();
+        }}
       />
       <View
         style={
@@ -136,8 +140,8 @@ const Home = () => {
           <Text>{data?.uv}</Text>
         </View>
         <View style={{justifyContent: 'center', alignItems: 'center'}}>
-          <Text>%RAIN</Text>
-          <Text>{data?.cloud}%</Text>
+          <Text>RAIN</Text>
+          <Text>{forcastArray[0]?.day?.daily_chance_of_rain}%</Text>
         </View>
         <View style={{justifyContent: 'center', alignItems: 'center'}}>
           <Text>Humidity</Text>

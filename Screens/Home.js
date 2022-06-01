@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View, Image, StatusBar} from 'react-native';
+import {StyleSheet, Text, View, Image, StatusBar, FlatList} from 'react-native';
 import React, {useEffect} from 'react';
 import Header from './Header';
 import {getWeather} from '../src/api';
@@ -10,6 +10,7 @@ const Home = () => {
   const [location, setlocation] = React.useState(null);
   const [value, setval] = React.useState('');
   const [currentLocation, setCurrentLocation] = React.useState();
+  const [forcastArray, setforcastArray] = React.useState([]);
   useEffect(() => {
     GetLocation.getCurrentPosition({
       enableHighAccuracy: true,
@@ -23,29 +24,33 @@ const Home = () => {
         const {code, message} = error;
         console.warn(code, message);
       });
+    setval('');
   }, []);
   useEffect(() => {
     var query = `${currentLocation?.latitude},${currentLocation?.longitude}`;
-    getWeather('/current.json', query)
+    getWeather('/forecast.json', query)
       .then(res => {
         setdata(res.data?.current);
         setlocation(res.data?.location);
+        setforcastArray(res.data?.forecast?.forecastday);
       })
       .catch(err => {
         console.log(err);
       });
   }, [currentLocation]);
   const getData = () => {
-    getWeather('/current.json', value)
+    getWeather('/forecast.json', value)
       .then(res => {
         setdata(res.data?.current);
         setlocation(res.data?.location);
+        setforcastArray(res.data?.forecast?.forecastday);
+        setval('');
       })
       .catch(err => {
         console.log(err);
       });
   };
-  console.log(data);
+  console.log(forcastArray);
   return (
     <View style={{backgroundColor: '#ffffff', flex: 1}}>
       <StatusBar
@@ -138,6 +143,63 @@ const Home = () => {
           <Text>Humidity</Text>
           <Text>{data?.humidity}</Text>
         </View>
+      </View>
+      <View style={{marginHorizontal: 14}}>
+        <FlatList
+          data={forcastArray}
+          showsHorizontalScrollIndicator={false}
+          horizontal
+          renderItem={({item}) => {
+            return (
+              <View
+                style={{
+                  height: 110,
+                  width: 200,
+                  padding: 10,
+                  margin: 10,
+                  marginTop: 30,
+                  backgroundColor: '#eee',
+                  borderRadius: 10,
+                  elevation: 5,
+                }}>
+                <Text
+                  style={{textAlign: 'center', fontFamily: 'Poppins-Regular'}}>
+                  {item?.date}
+                </Text>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-around',
+                    width: '90%',
+                    height: 70,
+                  }}>
+                  <Image
+                    source={{uri: `https:${item?.day?.condition?.icon}`}}
+                    style={{height: 60, width: 60}}
+                  />
+                  <View
+                    style={{justifyContent: 'center', alignItems: 'center'}}>
+                    <Text style={{fontSize: 16, fontFamily: 'Poppins-Regular'}}>
+                      {item?.day?.mintemp_c}°
+                    </Text>
+                    <Text style={{fontSize: 16, fontFamily: 'Poppins-Regular'}}>
+                      {item?.day?.maxtemp_c}°
+                    </Text>
+                  </View>
+                  <View
+                    style={{justifyContent: 'center', alignItems: 'center'}}>
+                    <Text style={{fontSize: 16, fontFamily: 'Poppins-Regular'}}>
+                      RAIN
+                    </Text>
+                    <Text style={{fontSize: 16, fontFamily: 'Poppins-Regular'}}>
+                      {item?.day?.daily_chance_of_rain}%
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            );
+          }}
+        />
       </View>
     </View>
   );

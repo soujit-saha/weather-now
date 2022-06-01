@@ -8,6 +8,7 @@ export const getWeather = (url, query) => {
       q: query,
       key: 'b456b674f2eb4da0a5553806220106',
       aqi: 'yes',
+      days: 3,
     },
   });
 };

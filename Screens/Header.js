@@ -1,7 +1,14 @@
-import {StyleSheet, Text, View, TextInput, Image} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Image,
+  Pressable,
+} from 'react-native';
 import React from 'react';
 
-const Header = () => {
+const Header = ({onChangeText, value, onPress}) => {
   return (
     <View
       style={{
@@ -25,11 +32,19 @@ const Header = () => {
         }}
         placeholder="Search Location"
         placeholderTextColor="#C4C4C4"
+        onChangeText={onChangeText}
+        value={value}
       />
-      <Image
-        source={require('../Icons/search.png')}
-        style={{height: 17.5, width: 17.5}}
-      />
+      <Pressable onPress={onPress}>
+        <Image
+          source={require('../Icons/search.png')}
+          style={{
+            height: 17.5,
+            width: 17.5,
+            tintColor: value.length > 1 ? '#000' : undefined,
+          }}
+        />
+      </Pressable>
     </View>
   );
 };

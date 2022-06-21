@@ -1,9 +1,19 @@
-import {StyleSheet, Text, View, Image, StatusBar, FlatList} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  StatusBar,
+  FlatList,
+  ScrollView,
+  ActivityIndicator,
+} from 'react-native';
 import React, {useEffect} from 'react';
 import Header from './Header';
 import {getWeather} from '../src/api';
 // import Header from './Header';
 import GetLocation from 'react-native-get-location';
+import MapView, {Marker} from 'react-native-maps';
 const Home = () => {
   var date = new Date();
   const [data, setdata] = React.useState(null);
@@ -50,161 +60,220 @@ const Home = () => {
         console.log(err);
       });
   };
-  console.log(forcastArray);
+  // console.log(location);
   return (
     <View style={{backgroundColor: '#ffffff', flex: 1}}>
       <StatusBar
-        // translucent
+        translucent
         backgroundColor={'transparent'}
-        barStyle="dark-content"
+        barStyle="light-content"
       />
-      <Header
-        onChangeText={txt => setval(txt)}
-        value={value}
-        onPress={() => getData()}
-        onSubmitEditing={({nativeEvent: {text, eventCount, target}}) => {
-          setval(text);
-          getData();
-        }}
-      />
-      <View
-        style={
-          {
-            // justifyContent: 'center',
-            // alignItems: 'center',
-          }
-        }>
-        <Image
-          source={{uri: `https:${data?.condition?.icon}`}}
+      {location == null ? (
+        <ActivityIndicator />
+      ) : (
+        <MapView
+          region={{
+            latitude: location?.lat,
+            longitude: location?.lon,
+            latitudeDelta: 0.074,
+            longitudeDelta: 0.074,
+          }}
           style={{
-            height: 123,
-            width: 123,
-            alignSelf: 'center',
-            resizeMode: 'contain',
+            height: '100%',
+            width: '100%',
+            opacity: 0.8,
+          }}
+          mapType="hybrid">
+          <Marker
+            title={location?.name}
+            pinColor="green"
+            coordinate={{
+              latitude: location?.lat,
+              longitudeDelta: 0.0014,
+              longitude: location?.lon,
+              latitudeDelta: 0.0014,
+            }}
+          />
+        </MapView>
+      )}
+      <ScrollView style={{position: 'absolute'}}>
+        <Header
+          onChangeText={txt => setval(txt)}
+          value={value}
+          onPress={() => getData()}
+          onSubmitEditing={({nativeEvent: {text, eventCount, target}}) => {
+            setval(text);
+            getData();
           }}
         />
+
         <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            // width: '45%',
-            justifyContent: 'center',
-            // padding: 3,
-            // marginTop: 20,
-          }}>
+          style={
+            {
+              // justifyContent: 'center',
+              // alignItems: 'center',
+            }
+          }>
+          <Image
+            source={{uri: `https:${data?.condition?.icon}`}}
+            style={{
+              height: 123,
+              width: 123,
+              alignSelf: 'center',
+              resizeMode: 'contain',
+            }}
+          />
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              // width: '45%',
+              justifyContent: 'center',
+              // padding: 3,
+              // marginTop: 20,
+            }}>
+            <Text
+              style={{
+                fontSize: 30,
+                lineHeight: 45,
+                fontFamily: 'Poppins-SemiBold',
+                color: '#FFF',
+                textAlign: 'center',
+                textShadowColor: '#000',
+                textShadowOffset: {
+                  height: 1,
+                  width: 10,
+                },
+                textShadowRadius: 33,
+                shadowOpacity: 9,
+              }}>
+              {location?.name}
+            </Text>
+            <Image
+              source={require('../Icons/arow.png')}
+              style={{
+                height: 20,
+                width: 20,
+                marginHorizontal: 10,
+                tintColor: '#fff',
+              }}
+            />
+          </View>
           <Text
             style={{
-              fontSize: 30,
-              lineHeight: 45,
-              fontFamily: 'Poppins-SemiBold',
-              color: '#2C2C2C',
+              fontSize: 70,
+              fontFamily: 'Poppins-semiBold',
+              color: '#FFF',
+              textAlign: 'center',
+              textShadowColor: '#000',
+              textShadowOffset: {
+                height: 1,
+                width: 10,
+              },
+              textShadowRadius: 33,
+              shadowOpacity: 9,
+              marginTop: 80,
             }}>
-            {location?.name}
+            {data?.temp_c}°C
           </Text>
-          <Image
-            source={require('../Icons/arow.png')}
-            style={{height: 20, width: 20, marginHorizontal: 10}}
-          />
         </View>
-        <Text
+        <View>
+          {/* /////////////////////////////////////////////////////////////////// */}
+        </View>
+        <View
           style={{
-            fontSize: 70,
-            fontFamily: 'Poppins-semiBold',
-            color: '#2C2C2C',
-            textAlign: 'center',
-          }}>
-          {data?.temp_c}°C
-        </Text>
-      </View>
-      <View>
-        {/* /////////////////////////////////////////////////////////////////// */}
-      </View>
-      <View
-        style={{
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          flexDirection: 'row',
-          backgroundColor: '#EFEFEF',
-          borderRadius: 11,
-          paddingHorizontal: 15,
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexDirection: 'row',
+            backgroundColor: '#EFEFEF',
+            borderRadius: 11,
+            paddingHorizontal: 15,
 
-          height: 60,
-          marginHorizontal: 24,
-        }}>
-        <View style={{justifyContent: 'center', alignItems: 'center'}}>
-          <Text>TIME</Text>
-          <Text>{date.toLocaleTimeString()}</Text>
+            height: 60,
+            marginHorizontal: 24,
+          }}>
+          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            <Text>TIME</Text>
+            <Text>{date.toLocaleTimeString()}</Text>
+          </View>
+          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            <Text>UV</Text>
+            <Text>{data?.uv}</Text>
+          </View>
+          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            <Text>RAIN</Text>
+            <Text>{forcastArray[0]?.day?.daily_chance_of_rain}%</Text>
+          </View>
+          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            <Text>Humidity</Text>
+            <Text>{data?.humidity}</Text>
+          </View>
         </View>
-        <View style={{justifyContent: 'center', alignItems: 'center'}}>
-          <Text>UV</Text>
-          <Text>{data?.uv}</Text>
-        </View>
-        <View style={{justifyContent: 'center', alignItems: 'center'}}>
-          <Text>RAIN</Text>
-          <Text>{forcastArray[0]?.day?.daily_chance_of_rain}%</Text>
-        </View>
-        <View style={{justifyContent: 'center', alignItems: 'center'}}>
-          <Text>Humidity</Text>
-          <Text>{data?.humidity}</Text>
-        </View>
-      </View>
-      <View style={{marginHorizontal: 14}}>
-        <FlatList
-          data={forcastArray}
-          showsHorizontalScrollIndicator={false}
-          horizontal
-          renderItem={({item}) => {
-            return (
-              <View
-                style={{
-                  height: 110,
-                  width: 200,
-                  padding: 10,
-                  margin: 10,
-                  marginTop: 30,
-                  backgroundColor: '#eee',
-                  borderRadius: 10,
-                  elevation: 5,
-                }}>
-                <Text
-                  style={{textAlign: 'center', fontFamily: 'Poppins-Regular'}}>
-                  {item?.date}
-                </Text>
+        <View style={{marginHorizontal: 14}}>
+          <FlatList
+            data={forcastArray}
+            showsHorizontalScrollIndicator={false}
+            horizontal
+            renderItem={({item}) => {
+              return (
                 <View
                   style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-around',
-                    width: '90%',
-                    height: 70,
+                    height: 110,
+                    width: 200,
+                    padding: 10,
+                    margin: 10,
+                    marginTop: 30,
+                    backgroundColor: '#eee',
+                    borderRadius: 10,
+                    elevation: 5,
                   }}>
-                  <Image
-                    source={{uri: `https:${item?.day?.condition?.icon}`}}
-                    style={{height: 60, width: 60}}
-                  />
+                  <Text
+                    style={{
+                      textAlign: 'center',
+                      fontFamily: 'Poppins-Regular',
+                    }}>
+                    {item?.date}
+                  </Text>
                   <View
-                    style={{justifyContent: 'center', alignItems: 'center'}}>
-                    <Text style={{fontSize: 16, fontFamily: 'Poppins-Regular'}}>
-                      {item?.day?.mintemp_c}°
-                    </Text>
-                    <Text style={{fontSize: 16, fontFamily: 'Poppins-Regular'}}>
-                      {item?.day?.maxtemp_c}°
-                    </Text>
-                  </View>
-                  <View
-                    style={{justifyContent: 'center', alignItems: 'center'}}>
-                    <Text style={{fontSize: 16, fontFamily: 'Poppins-Regular'}}>
-                      RAIN
-                    </Text>
-                    <Text style={{fontSize: 16, fontFamily: 'Poppins-Regular'}}>
-                      {item?.day?.daily_chance_of_rain}%
-                    </Text>
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-around',
+                      width: '90%',
+                      height: 70,
+                    }}>
+                    <Image
+                      source={{uri: `https:${item?.day?.condition?.icon}`}}
+                      style={{height: 60, width: 60}}
+                    />
+                    <View
+                      style={{justifyContent: 'center', alignItems: 'center'}}>
+                      <Text
+                        style={{fontSize: 16, fontFamily: 'Poppins-Regular'}}>
+                        {item?.day?.mintemp_c}°
+                      </Text>
+                      <Text
+                        style={{fontSize: 16, fontFamily: 'Poppins-Regular'}}>
+                        {item?.day?.maxtemp_c}°
+                      </Text>
+                    </View>
+                    <View
+                      style={{justifyContent: 'center', alignItems: 'center'}}>
+                      <Text
+                        style={{fontSize: 16, fontFamily: 'Poppins-Regular'}}>
+                        RAIN
+                      </Text>
+                      <Text
+                        style={{fontSize: 16, fontFamily: 'Poppins-Regular'}}>
+                        {item?.day?.daily_chance_of_rain}%
+                      </Text>
+                    </View>
                   </View>
                 </View>
-              </View>
-            );
-          }}
-        />
-      </View>
+              );
+            }}
+          />
+        </View>
+      </ScrollView>
     </View>
   );
 };
